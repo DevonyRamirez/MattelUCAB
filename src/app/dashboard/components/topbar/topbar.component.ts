@@ -8,5 +8,5 @@ import { Component } from '@angular/core';
   styleUrl: './topbar.component.css'
 })
 export class TopbarComponent {
-
+  userName = localStorage.getItem('userName') || 'Usuario';
 }

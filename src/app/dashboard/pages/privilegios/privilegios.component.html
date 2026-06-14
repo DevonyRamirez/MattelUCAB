@@ -1,0 +1,138 @@
+<section class="privilegios-page">
+  <div class="page-header">
+    <div>
+      <h1>Privilegios</h1>
+      <p>Consulta los roles y los privilegios asignados.</p>
+    </div>
+
+    <div class="header-actions">
+      <button type="button" class="action-button secondary" (click)="abrirModalModificar()" [disabled]="cargando">
+        Modificar
+      </button>
+      <button type="button" class="action-button" (click)="cargarPrivilegios()" [disabled]="cargando">
+        Actualizar
+      </button>
+    </div>
+  </div>
+
+  <div *ngIf="mensajeAsignacion && !modalAbierto" class="assign-message" [class.success]="tipoMensajeAsignacion === 'success'" [class.error]="tipoMensajeAsignacion === 'error'">
+    {{ mensajeAsignacion }}
+  </div>
+
+  <div *ngIf="cargando" class="state-box">Cargando privilegios...</div>
+  <div *ngIf="!cargando && error" class="state-box error-box">{{ error }}</div>
+
+  <div *ngIf="modalAbierto" class="modal-backdrop">
+    <form class="modal-card" (ngSubmit)="asignarPrivilegios()">
+      <div class="modal-head">
+        <div>
+          <h2>Modificar privilegios</h2>
+          <p>Selecciona un rol, marca los privilegios que debe tener y guarda los cambios.</p>
+        </div>
+        <button type="button" class="icon-button" (click)="cancelarModificacion()">X</button>
+      </div>
+
+      <div class="filter-row">
+        <label class="field role-field">
+          <span>Rol</span>
+          <select name="rolSeleccionado" [(ngModel)]="rolSeleccionado" (ngModelChange)="seleccionarRol()">
+            <option value="">Selecciona un rol</option>
+            <option *ngFor="let rol of roles" [value]="rol.id_rol">{{ rol.nombre_rol }}</option>
+          </select>
+        </label>
+
+        <label class="field">
+          <span>Buscar privilegio</span>
+          <input
+            type="search"
+            name="busquedaPrivilegio"
+            [(ngModel)]="busquedaPrivilegio"
+            placeholder="Nombre o tipo" />
+        </label>
+
+        <label class="field">
+          <span>Tipo</span>
+          <select name="filtroTipoPrivilegio" [(ngModel)]="filtroTipoPrivilegio">
+            <option value="">Todos</option>
+            <option *ngFor="let tipo of tiposPrivilegio" [value]="tipo">{{ tipo }}</option>
+          </select>
+        </label>
+      </div>
+
+      <div class="selection-summary" *ngIf="rolSeleccionado">
+        <span>{{ cantidadSeleccionada }} seleccionados</span>
+        <span>{{ cantidadNuevosSeleccionados }} por agregar</span>
+        <span>{{ cantidadPorEliminar }} por eliminar</span>
+        <span>{{ privilegiosFiltrados.length }} visibles</span>
+      </div>
+
+      <div class="bulk-actions" *ngIf="rolSeleccionado && !cargandoRol">
+        <button type="button" class="mini-button" (click)="marcarPrivilegiosFiltrados()" [disabled]="privilegiosFiltrados.length === 0">
+          Marcar visibles
+        </button>
+        <button type="button" class="mini-button secondary" (click)="desmarcarPrivilegiosFiltrados()" [disabled]="privilegiosFiltrados.length === 0">
+          Desmarcar visibles
+        </button>
+      </div>
+
+      <div *ngIf="cargandoRol" class="inline-state">Cargando privilegios del rol...</div>
+
+      <div class="privilege-groups" *ngIf="rolSeleccionado && !cargandoRol">
+        <section *ngFor="let grupo of privilegiosAgrupados" class="privilege-group">
+          <h3>{{ grupo.tipo }}</h3>
+
+          <div class="privilege-list">
+            <label *ngFor="let privilegio of grupo.privilegios" class="privilege-option">
+              <input
+                type="checkbox"
+                [checked]="estaSeleccionado(privilegio.id_privilegio)"
+                (change)="cambiarPrivilegioDesdeEvento(privilegio.id_privilegio, $event)" />
+              <span>{{ privilegio.descripcion_privilegio }}</span>
+              <small *ngIf="yaAsignado(privilegio.id_privilegio)">Asignado</small>
+            </label>
+          </div>
+        </section>
+
+        <div *ngIf="privilegiosFiltrados.length === 0" class="inline-state">
+          No hay privilegios con esos filtros.
+        </div>
+      </div>
+
+      <div *ngIf="mensajeAsignacion && modalAbierto" class="assign-message" [class.success]="tipoMensajeAsignacion === 'success'" [class.error]="tipoMensajeAsignacion === 'error'">
+        {{ mensajeAsignacion }}
+      </div>
+
+      <div class="modal-actions">
+        <button type="button" class="action-button secondary" (click)="cancelarModificacion()" [disabled]="guardando">
+          Cancelar
+        </button>
+        <button type="submit" class="action-button" [disabled]="guardando || cargandoRol">
+          Aceptar
+        </button>
+      </div>
+    </form>
+  </div>
+
+  <div *ngIf="!cargando && !error && tablaVisible" class="table-shell">
+    <table #privilegiosTable class="display privilegios-table">
+      <thead>
+        <tr>
+          <th>Rol</th>
+          <th>Descripcion</th>
+          <th>Privilegios BD</th>
+          <th>Privilegios de vista</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let rol of roles">
+          <td>
+            <strong>{{ rol.nombre_rol }}</strong>
+          </td>
+          <td>{{ rol.descripcion_rol || 'Sin descripcion' }}</td>
+          <td>{{ formatearPrivilegios(rol.privilegios_bd) }}</td>
+          <td>{{ formatearPrivilegios(rol.privilegios_vista) }}</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</section>

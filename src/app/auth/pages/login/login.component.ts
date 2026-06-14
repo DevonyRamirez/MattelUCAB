@@ -34,6 +34,7 @@ export class LoginComponent {
       // Guardar información relevante de la sesión
       localStorage.setItem('userId', response.user.id_usuario);
       localStorage.setItem('userName', response.user.nombre_usuario);
+      localStorage.setItem('roleId', String(response.user.fk_rol ?? response.user.FK_ROL ?? response.user.id_rol));
       
       this.router.navigate(['/dashboard']);
     }
