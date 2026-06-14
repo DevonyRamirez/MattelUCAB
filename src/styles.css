@@ -1,1 +1,298 @@
-/* You can add global styles to this file, and also import other style files */
+@import url('https://fonts.googleapis.com/css2?family=Onest:wght@400;500;600;700;800&display=swap');
+
+:root {
+  --color-principal: #d41484;
+  --color-principal-oscuro: #aa0f68;
+  --color-texto: #111827;
+  --color-secundario: #4b5563;
+  --color-suave: #98a2b3;
+  --color-borde: #a8b2c1;
+  --color-error: #b42318;
+  --sombra-boton: 0 10px 20px rgba(212, 20, 132, 0.24);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  min-height: 100%;
+  margin: 0;
+}
+
+body {
+  color: var(--color-texto);
+  background: #ffffff;
+  font-family: 'Onest', Arial, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+button,
+input,
+select,
+textarea {
+  font: inherit;
+}
+
+a {
+  color: var(--color-principal);
+  font-weight: 600;
+  text-decoration: none;
+}
+
+a:hover {
+  color: var(--color-principal-oscuro);
+}
+
+.tarjeta-formulario {
+  width: min(100%, 512px);
+}
+
+.formulario-login {
+  width: min(100%, 448px);
+}
+
+.formulario-registro {
+  width: min(100%, 560px);
+}
+
+.encabezado-formulario {
+  margin-bottom: 20px;
+}
+
+.encabezado-formulario h1 {
+  margin: 0 0 8px;
+  color: var(--color-principal);
+  font-size: clamp(2rem, 3.2vw, 2.35rem);
+  font-weight: 800;
+  line-height: 1.08;
+}
+
+.encabezado-formulario p {
+  max-width: 520px;
+  margin: 0;
+  color: var(--color-secundario);
+  font-size: 1rem;
+  line-height: 1.45;
+}
+
+.rejilla {
+  display: grid;
+  gap: 12px 16px;
+}
+
+.dos-columnas {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.tres-columnas {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.telefono {
+  grid-template-columns: minmax(130px, 0.75fr) minmax(0, 1.25fr);
+}
+
+.campo {
+  display: grid;
+  gap: 6px;
+  margin-bottom: 10px;
+}
+
+.campo span,
+.grupo-opciones legend {
+  color: #0f172a;
+  font-size: 0.78rem;
+  font-weight: 800;
+}
+
+.campo b,
+.grupo-opciones b {
+  color: var(--color-principal);
+}
+
+.campo input,
+.campo select,
+.campo textarea {
+  width: 100%;
+  min-height: 50px;
+  border: 1px solid var(--color-borde);
+  border-radius: 4px;
+  padding: 0 16px;
+  color: var(--color-texto);
+  background: #ffffff;
+  outline: none;
+  transition:
+    border-color 160ms ease,
+    box-shadow 160ms ease;
+}
+
+.campo textarea {
+  min-height: 74px;
+  padding-block: 14px;
+  resize: vertical;
+}
+
+.campo input::placeholder,
+.campo textarea::placeholder {
+  color: var(--color-suave);
+}
+
+.campo input:focus,
+.campo select:focus,
+.campo textarea:focus {
+  border-color: var(--color-principal);
+  box-shadow: 0 0 0 3px rgba(212, 20, 132, 0.12);
+}
+
+.campo small,
+.error-bloque {
+  color: var(--color-error);
+  font-size: 0.78rem;
+}
+
+.campo-con-accion {
+  position: relative;
+}
+
+.campo-con-accion input {
+  padding-right: 78px;
+}
+
+.boton-icono {
+  position: absolute;
+  top: 50%;
+  right: 10px;
+  border: 0;
+  padding: 6px 8px;
+  color: var(--color-suave);
+  background: transparent;
+  cursor: pointer;
+  font-size: 0.82rem;
+  font-weight: 700;
+}
+
+.fila-opciones {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 18px;
+  margin: 18px 0 28px;
+  color: var(--color-suave);
+}
+
+.casilla {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.casilla input {
+  width: 17px;
+  height: 17px;
+  accent-color: var(--color-principal);
+}
+
+.boton-principal {
+  display: block;
+  width: min(100%, 232px);
+  min-height: 48px;
+  margin: 24px auto 0;
+  border: 0;
+  border-radius: 9px;
+  color: #ffffff;
+  background: var(--color-principal);
+  box-shadow: var(--sombra-boton);
+  cursor: pointer;
+  font-weight: 800;
+  transition:
+    background 160ms ease,
+    transform 160ms ease;
+}
+
+.boton-principal:hover:not(:disabled) {
+  background: var(--color-principal-oscuro);
+  transform: translateY(-1px);
+}
+
+.boton-principal:disabled {
+  cursor: wait;
+  opacity: 0.72;
+}
+
+.mensaje {
+  margin: 14px 0 0;
+  color: var(--color-secundario);
+  font-size: 0.9rem;
+  text-align: center;
+}
+
+.pie-formulario {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  margin-top: 24px;
+  color: var(--color-suave);
+  text-align: center;
+}
+
+.grupo-opciones {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px 16px;
+  margin: 0 0 12px;
+  padding: 0;
+  border: 0;
+}
+
+.grupo-opciones legend {
+  grid-column: 1 / -1;
+}
+
+.grupo-opciones label {
+  position: relative;
+  display: flex;
+  min-height: 50px;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid var(--color-borde);
+  border-radius: 4px;
+  color: var(--color-suave);
+  cursor: pointer;
+  font-weight: 500;
+}
+
+.grupo-opciones input {
+  position: absolute;
+  opacity: 0;
+}
+
+.grupo-opciones label:has(input:checked) {
+  border-color: var(--color-principal);
+  color: var(--color-principal);
+  box-shadow: 0 0 0 3px rgba(212, 20, 132, 0.12);
+}
+
+@media (max-width: 720px) {
+  .dos-columnas,
+  .tres-columnas,
+  .telefono,
+  .grupo-opciones {
+    grid-template-columns: 1fr;
+  }
+
+  .fila-opciones {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .tarjeta-formulario,
+  .formulario-login,
+  .formulario-registro {
+    width: 100%;
+  }
+}

@@ -1,0 +1,217 @@
+.split-layout {
+  display: flex;
+  min-height: 100vh;
+  width: 100%;
+}
+
+/* Left side: Pink/Barbie theme background */
+.left-panel {
+  flex: 1;
+  background-color: var(--color-principal);
+  background-image: radial-gradient(circle at top left, #fbcfe8 0%, var(--color-principal) 70%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 40px;
+  color: white;
+}
+
+.brand-content {
+  text-align: center;
+  max-width: 400px;
+}
+
+.brand-logo {
+  max-width: 280px;
+  height: auto;
+  margin-bottom: 24px;
+  filter: drop-shadow(0 4px 10px rgba(0, 0, 0, 0.15));
+}
+
+.brand-subtitle {
+  font-size: 1.25rem;
+  font-weight: 500;
+  line-height: 1.5;
+  color: white;
+  margin: 0;
+  font-family: 'Onest', sans-serif;
+}
+
+/* Right side: Form */
+.right-panel {
+  flex: 1;
+  background-color: #ffffff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 40px;
+}
+
+.form-container {
+  width: 100%;
+  max-width: 420px;
+}
+
+.form-title {
+  font-size: 2rem;
+  font-weight: 800;
+  color: var(--color-principal);
+  margin-bottom: 3px;
+  font-family: 'Onest', sans-serif;
+}
+
+.form-subtitle {
+  font-size: 1rem;
+  color: var(--color-secundario);
+  margin-bottom: 32px;
+}
+
+.login-form {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.campo {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.campo label span {
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: var(--color-principal);
+}
+
+.campo input[type="email"],
+.campo input[type="text"],
+.campo input[type="password"] {
+  width: 100%;
+  height: 48px;
+  border: 1px solid var(--color-borde);
+  border-radius: 8px;
+  padding: 0 16px;
+  font-size: 0.95rem;
+  color: var(--color-texto);
+  transition: border-color 0.2s, box-shadow 0.2s;
+  background-color: #ffffff;
+}
+
+.campo input::placeholder {
+  color: var(--color-suave);
+}
+
+.campo input:focus {
+  outline: none;
+  border-color: var(--color-principal);
+  box-shadow: 0 0 0 3px rgba(212, 20, 132, 0.15);
+}
+
+.password-input-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.password-input-wrapper input {
+  padding-right: 48px;
+}
+
+.toggle-password {
+  position: absolute;
+  right: 12px;
+  background: none;
+  border: none;
+  color: var(--color-suave);
+  cursor: pointer;
+  padding: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: color 0.2s;
+}
+
+.toggle-password:hover {
+  color: var(--color-principal);
+}
+
+.form-actions-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 4px;
+  margin-bottom: 8px;
+}
+
+.checkbox-container {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.85rem;
+  color: var(--color-secundario);
+  cursor: pointer;
+  font-weight: 500;
+}
+
+.checkbox-container input {
+  width: 16px;
+  height: 16px;
+  accent-color: var(--color-principal);
+  cursor: pointer;
+}
+
+.forgot-password {
+  font-size: 0.85rem;
+  color: var(--color-secundario);
+  text-decoration: none;
+  font-weight: 500;
+}
+
+.forgot-password:hover {
+  color: var(--color-principal);
+  text-decoration: underline;
+}
+
+.submit-btn {
+  width: 100%;
+  height: 48px;
+  background-color: var(--color-principal); /* Using the dark text color for a sleek look similar to the image button */
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 1rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background-color 0.2s, transform 0.1s;
+  box-shadow: 0 4px 6px rgba(255, 0, 234, 0.1);
+}
+
+.submit-btn:hover:not(:disabled) {
+  background-color: (--color-principal);
+  transform: translateY(-1px);
+}
+
+.submit-btn:disabled {
+  background-color: var(--color-suave);
+  cursor: not-allowed;
+  box-shadow: none;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .split-layout {
+    flex-direction: column;
+  }
+
+  .left-panel {
+    flex: none;
+    padding: 60px 20px;
+  }
+
+  .right-panel {
+    flex: 1;
+    padding: 40px 20px;
+    align-items: flex-start;
+  }
+}
