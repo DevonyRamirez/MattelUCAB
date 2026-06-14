@@ -198,6 +198,65 @@
   box-shadow: none;
 }
 
+.login-modal-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 20;
+  display: grid;
+  place-items: center;
+  padding: 20px;
+  background: rgba(17, 24, 39, 0.36);
+}
+
+.login-modal {
+  display: grid;
+  width: min(100%, 420px);
+  gap: 14px;
+  border: 1px solid #f5b1d4;
+  border-radius: 12px;
+  padding: 24px;
+  background: #ffffff;
+  box-shadow: 0 24px 60px rgba(17, 24, 39, 0.22);
+  text-align: center;
+}
+
+.modal-icon {
+  display: grid;
+  width: 56px;
+  height: 56px;
+  margin: 0 auto;
+  place-items: center;
+  border-radius: 50%;
+  color: var(--color-principal);
+  background: #fce4ec;
+}
+
+.modal-copy h2 {
+  margin: 0 0 8px;
+  color: var(--color-principal);
+  font-size: 1.25rem;
+}
+
+.modal-copy p {
+  margin: 0;
+  color: var(--color-secundario);
+  line-height: 1.45;
+}
+
+.modal-action {
+  min-height: 44px;
+  border: 0;
+  border-radius: 8px;
+  color: #ffffff;
+  background: var(--color-principal);
+  cursor: pointer;
+  font-weight: 800;
+}
+
+.modal-action:hover {
+  background: var(--color-principal-oscuro);
+}
+
 /* Responsive adjustments */
 @media (max-width: 768px) {
   .split-layout {

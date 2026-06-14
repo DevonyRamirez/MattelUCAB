@@ -1,5 +1,5 @@
-import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { AuthService } from '../../services/auth.service';
@@ -15,6 +15,10 @@ export class LoginComponent {
   username = '';
   password = '';
   mostrarContrasena = false;
+  modalVisible = false;
+  modalTitulo = '';
+  modalMensaje = '';
+  modalTipo: 'error' | 'success' = 'error';
 
   constructor(private authService: AuthService, private router: Router) {}
 
@@ -26,17 +30,31 @@ export class LoginComponent {
     const response = await this.authService.login(this.username, this.password);
 
     if (!response.success) {
-      alert('Error: ' + response.error);
-    } else {
-      alert('¡Bienvenid@ ' + response.user.nombre_usuario + '!');
-      console.log('Datos de usuario obtenidos de la DB:', response.user);
-      
-      // Guardar información relevante de la sesión
-      localStorage.setItem('userId', response.user.id_usuario);
-      localStorage.setItem('userName', response.user.nombre_usuario);
-      localStorage.setItem('roleId', String(response.user.fk_rol ?? response.user.FK_ROL ?? response.user.id_rol));
-      
-      this.router.navigate(['/dashboard']);
+      this.mostrarModal(
+        'No pudimos iniciar sesión',
+        response.error || 'Usuario o contraseña incorrectos.',
+        'error'
+      );
+      return;
     }
+
+    console.log('Datos de usuario obtenidos de la DB:', response.user);
+
+    localStorage.setItem('userId', response.user.id_usuario);
+    localStorage.setItem('userName', response.user.nombre_usuario);
+    localStorage.setItem('roleId', String(response.user.fk_rol ?? response.user.FK_ROL ?? response.user.id_rol));
+
+    this.router.navigate(['/dashboard']);
+  }
+
+  cerrarModal() {
+    this.modalVisible = false;
+  }
+
+  private mostrarModal(titulo: string, mensaje: string, tipo: 'error' | 'success') {
+    this.modalTitulo = titulo;
+    this.modalMensaje = mensaje;
+    this.modalTipo = tipo;
+    this.modalVisible = true;
   }
 }
