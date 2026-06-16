@@ -23,6 +23,12 @@ export interface AsignarPrivilegiosResult {
   mensaje: string;
 }
 
+export interface CrearRolResult {
+  ok: boolean;
+  id_rol?: number;
+  mensaje: string;
+}
+
 @Injectable({
   providedIn: 'root'
 })
@@ -64,6 +70,20 @@ export class PrivilegiosService {
     }
 
     return (data ?? []) as Privilegio[];
+  }
+
+  async crearRol(nombreRol: string, descripcionRol: string | null): Promise<CrearRolResult> {
+    const { data, error } = await this.supabase.rpc('crear_rol', {
+      p_nombre_rol: nombreRol,
+      p_descripcion_rol: descripcionRol
+    });
+
+    if (error) {
+      throw new Error(error.message);
+    }
+
+    const result = Array.isArray(data) ? data[0] : data;
+    return result as CrearRolResult;
   }
 
   async consultarPrivilegiosIdsPorRol(roleId: number): Promise<number[]> {

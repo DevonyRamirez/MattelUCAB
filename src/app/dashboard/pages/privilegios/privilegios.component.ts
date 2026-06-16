@@ -21,7 +21,10 @@ export class PrivilegiosComponent implements OnInit, OnDestroy {
   roles: RolPrivilegios[] = [];
   catalogoPrivilegios: Privilegio[] = [];
   modalAbierto = false;
+  modalCrearRolAbierto = false;
   rolSeleccionado = '';
+  nombreRol = '';
+  descripcionRol = '';
   busquedaPrivilegio = '';
   filtroTipoPrivilegio = '';
   privilegiosExistentes = new Set<number>();
@@ -29,6 +32,7 @@ export class PrivilegiosComponent implements OnInit, OnDestroy {
   cargando = true;
   cargandoRol = false;
   guardando = false;
+  guardandoRol = false;
   tablaVisible = true;
   error = '';
   mensajeAsignacion = '';
@@ -86,6 +90,20 @@ export class PrivilegiosComponent implements OnInit, OnDestroy {
     this.mensajeAsignacion = '';
   }
 
+  abrirModalCrearRol() {
+    this.modalCrearRolAbierto = true;
+    this.nombreRol = '';
+    this.descripcionRol = '';
+    this.mensajeAsignacion = '';
+  }
+
+  cancelarCreacionRol() {
+    this.modalCrearRolAbierto = false;
+    this.nombreRol = '';
+    this.descripcionRol = '';
+    this.mensajeAsignacion = '';
+  }
+
   cancelarModificacion() {
     this.modalAbierto = false;
     this.rolSeleccionado = '';
@@ -94,6 +112,41 @@ export class PrivilegiosComponent implements OnInit, OnDestroy {
     this.privilegiosExistentes = new Set<number>();
     this.privilegiosSeleccionados = new Set<number>();
     this.mensajeAsignacion = '';
+  }
+
+  async crearRol() {
+    const nombreRol = this.nombreRol.trim();
+    const descripcionRol = this.descripcionRol.trim();
+
+    if (!nombreRol) {
+      this.mostrarMensaje('Ingresa el nombre del rol.', 'error');
+      return;
+    }
+
+    if (nombreRol.length > 50) {
+      this.mostrarMensaje('El nombre del rol no puede superar 50 caracteres.', 'error');
+      return;
+    }
+
+    if (descripcionRol.length > 300) {
+      this.mostrarMensaje('La descripcion del rol no puede superar 300 caracteres.', 'error');
+      return;
+    }
+
+    this.guardandoRol = true;
+
+    try {
+      const resultado = await this.privilegiosService.crearRol(nombreRol, descripcionRol || null);
+      this.modalCrearRolAbierto = false;
+      this.nombreRol = '';
+      this.descripcionRol = '';
+      await this.recargarTabla();
+      this.mostrarMensaje(resultado.mensaje, resultado.ok ? 'success' : 'error');
+    } catch (error) {
+      this.mostrarMensaje(error instanceof Error ? error.message : 'No se pudo crear el rol.', 'error');
+    } finally {
+      this.guardandoRol = false;
+    }
   }
 
   async seleccionarRol() {
