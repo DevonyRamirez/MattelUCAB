@@ -1,0 +1,114 @@
+<section class="reportes-page">
+  <div class="page-header">
+    <div>
+      <h1>Reportes</h1>
+      <p>Genera los reportes en PDF. Los datos se obtienen de stored procedures (Supabase RPC).</p>
+    </div>
+  </div>
+
+  <div class="reportes-grid">
+    <!-- Reporte 1: Cajas Master -->
+    <article class="reporte-card">
+      <h2>Cajas Máster para Subastas</h2>
+      <p>Total de SKUs en inventario de subastas y su equivalente en Cajas Máster (12 uds).</p>
+
+      <div *ngIf="estado.cajas.error" class="state-box error-box">{{ estado.cajas.error }}</div>
+
+      <div class="card-footer">
+        <button type="button" class="action-button" (click)="generarCajas()" [disabled]="estado.cajas.cargando">
+          {{ estado.cajas.cargando ? 'Generando...' : 'Generar PDF' }}
+        </button>
+        <button type="button" class="toggle-button" (click)="verResultado('cajas')" [disabled]="estado.cajas.cargando">
+          {{ estado.cajas.expandido ? 'Ocultar resultado ▲' : 'Ver resultado ▼' }}
+        </button>
+      </div>
+
+      <div *ngIf="estado.cajas.generado && estado.cajas.expandido" class="table-shell">
+        <table class="reporte-table">
+          <thead>
+            <tr><th *ngFor="let c of estado.cajas.columnas">{{ c }}</th></tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let fila of estado.cajas.filas">
+              <td *ngFor="let celda of fila">{{ celda }}</td>
+            </tr>
+            <tr *ngIf="estado.cajas.filas.length === 0"><td [attr.colspan]="estado.cajas.columnas.length">Sin datos.</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </article>
+
+    <!-- Reporte 2: SKUs B2B por categoria (rango de fechas) -->
+    <article class="reporte-card">
+      <h2>SKUs B2B por categoría</h2>
+      <p>SKUs adquiridos por clientes B2B en el rango de fechas seleccionado, agrupados por categoría.</p>
+
+      <div class="filtros-fecha">
+        <label class="field">
+          <span>Desde</span>
+          <input type="date" name="fechaInicio" [(ngModel)]="fechaInicio" (ngModelChange)="onFechaSkusChange()" />
+        </label>
+        <label class="field">
+          <span>Hasta</span>
+          <input type="date" name="fechaFin" [(ngModel)]="fechaFin" (ngModelChange)="onFechaSkusChange()" />
+        </label>
+      </div>
+
+      <div *ngIf="estado.skus.error" class="state-box error-box">{{ estado.skus.error }}</div>
+
+      <div class="card-footer">
+        <button type="button" class="action-button" (click)="generarSkus()" [disabled]="estado.skus.cargando">
+          {{ estado.skus.cargando ? 'Generando...' : 'Generar PDF' }}
+        </button>
+        <button type="button" class="toggle-button" (click)="verResultado('skus')" [disabled]="estado.skus.cargando">
+          {{ estado.skus.expandido ? 'Ocultar resultado ▲' : 'Ver resultado ▼' }}
+        </button>
+      </div>
+
+      <div *ngIf="estado.skus.generado && estado.skus.expandido" class="table-shell">
+        <table class="reporte-table">
+          <thead>
+            <tr><th *ngFor="let c of estado.skus.columnas">{{ c }}</th></tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let fila of estado.skus.filas">
+              <td *ngFor="let celda of fila">{{ celda }}</td>
+            </tr>
+            <tr *ngIf="estado.skus.filas.length === 0"><td [attr.colspan]="estado.skus.columnas.length">Sin datos.</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </article>
+
+    <!-- Reporte 3: Inventario en transito por tono de piel -->
+    <article class="reporte-card">
+      <h2>Inventario en tránsito por Tono de Piel</h2>
+      <p>Distribución porcentual del inventario en tránsito agrupado por tono de piel.</p>
+
+      <div *ngIf="estado.tono.error" class="state-box error-box">{{ estado.tono.error }}</div>
+
+      <div class="card-footer">
+        <button type="button" class="action-button" (click)="generarTono()" [disabled]="estado.tono.cargando">
+          {{ estado.tono.cargando ? 'Generando...' : 'Generar PDF' }}
+        </button>
+        <button type="button" class="toggle-button" (click)="verResultado('tono')" [disabled]="estado.tono.cargando">
+          {{ estado.tono.expandido ? 'Ocultar resultado ▲' : 'Ver resultado ▼' }}
+        </button>
+      </div>
+
+      <div *ngIf="estado.tono.generado && estado.tono.expandido" class="table-shell">
+        <table class="reporte-table">
+          <thead>
+            <tr><th *ngFor="let c of estado.tono.columnas">{{ c }}</th></tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let fila of estado.tono.filas">
+              <td *ngFor="let celda of fila">{{ celda }}</td>
+            </tr>
+            <tr *ngIf="estado.tono.filas.length === 0"><td [attr.colspan]="estado.tono.columnas.length">Sin datos.</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </article>
+  </div>
+</section>
