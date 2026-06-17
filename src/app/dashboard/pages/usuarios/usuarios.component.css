@@ -1,1 +1,17 @@
-
+.usuario-container {
+  max-width: 400px;
+  margin: 20px auto;
+  padding: 20px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+}
+.form-group { margin-bottom: 15px; }
+input, select { width: 100%; padding: 8px; margin-top: 5px; }
+.btn-guardar { 
+  background-color: #d6006c; /* Color rosa Mattel */
+  color: white; 
+  border: none; 
+  padding: 10px 20px; 
+  cursor: pointer; 
+  border-radius: 4px; 
+}
