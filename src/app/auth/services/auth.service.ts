@@ -43,22 +43,22 @@ export class AuthService {
         p_fk_persona_natural_empleado: 1 // Usamos el ID del empleado de prueba
       });
 
-    // 1. Verificamos si hubo un error de conexión con Supabase
+    // Verificamos si hubo un error de conexión con Supabase
     if (error) {
       return { success: false, error: error.message };
     }
 
-    // 2. Verificamos la respuesta lógica que programaste en tu SQL
+    // Verificamos la respuesta lógica que aparece en SQL
     if (data && data.length > 0) {
       const resultadoSQL = data[0]; // Extraemos la fila que retorna el procedure
       
-      // Si tu SQL devolvió ok = false, lanzamos ese error al componente
+      // Si SQL devolvió ok = false, lanzamos ese error al componente
       if (resultadoSQL.ok === false) {
         return { success: false, error: resultadoSQL.mensaje };
       }
     }
 
-    // 3. Solo si todo lo anterior pasó, decimos que fue un éxito
+    // Solo si todo lo anterior pasó, decimos que fue un éxito
     return { success: true, data: data };
   }
 
