@@ -8,6 +8,17 @@
   justify-content: space-between;
 }
 
+.page-header {
+  margin-bottom: 18px;
+}
+
+.header-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+  justify-content: flex-end;
+}
+
 h1,
 h2 {
   margin: 0;
