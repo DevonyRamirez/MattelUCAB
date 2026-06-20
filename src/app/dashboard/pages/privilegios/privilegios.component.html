@@ -6,8 +6,11 @@
     </div>
 
     <div class="header-actions">
+      <button type="button" class="action-button secondary" (click)="abrirModalCrearRol()" [disabled]="cargando">
+        Crear Rol
+      </button>
       <button type="button" class="action-button secondary" (click)="abrirModalModificar()" [disabled]="cargando">
-        Modificar
+        Modificar Privilegios
       </button>
       <button type="button" class="action-button" (click)="cargarPrivilegios()" [disabled]="cargando">
         Actualizar
@@ -15,12 +18,58 @@
     </div>
   </div>
 
-  <div *ngIf="mensajeAsignacion && !modalAbierto" class="assign-message" [class.success]="tipoMensajeAsignacion === 'success'" [class.error]="tipoMensajeAsignacion === 'error'">
+  <div *ngIf="mensajeAsignacion && !modalAbierto && !modalCrearRolAbierto" class="assign-message" [class.success]="tipoMensajeAsignacion === 'success'" [class.error]="tipoMensajeAsignacion === 'error'">
     {{ mensajeAsignacion }}
   </div>
 
   <div *ngIf="cargando" class="state-box">Cargando privilegios...</div>
   <div *ngIf="!cargando && error" class="state-box error-box">{{ error }}</div>
+
+  <div *ngIf="modalCrearRolAbierto" class="modal-backdrop">
+    <form class="modal-card role-modal-card" (ngSubmit)="crearRol()">
+      <div class="modal-head">
+        <div>
+          <h2>Crear Rol</h2>
+          <p>Registra el nombre y la descripcion del nuevo rol.</p>
+        </div>
+        <button type="button" class="icon-button" (click)="cancelarCreacionRol()">X</button>
+      </div>
+
+      <label class="field">
+        <span>Nombre</span>
+        <input
+          type="text"
+          name="nombreRol"
+          [(ngModel)]="nombreRol"
+          maxlength="50"
+          required
+          placeholder="Nombre del rol" />
+      </label>
+
+      <label class="field">
+        <span>Descripcion</span>
+        <textarea
+          name="descripcionRol"
+          [(ngModel)]="descripcionRol"
+          maxlength="300"
+          rows="5"
+          placeholder="Descripcion del rol"></textarea>
+      </label>
+
+      <div *ngIf="mensajeAsignacion && modalCrearRolAbierto" class="assign-message" [class.success]="tipoMensajeAsignacion === 'success'" [class.error]="tipoMensajeAsignacion === 'error'">
+        {{ mensajeAsignacion }}
+      </div>
+
+      <div class="modal-actions">
+        <button type="button" class="action-button secondary" (click)="cancelarCreacionRol()" [disabled]="guardandoRol">
+          Cancelar
+        </button>
+        <button type="submit" class="action-button" [disabled]="guardandoRol">
+          Guardar
+        </button>
+      </div>
+    </form>
+  </div>
 
   <div *ngIf="modalAbierto" class="modal-backdrop">
     <form class="modal-card" (ngSubmit)="asignarPrivilegios()">
