@@ -7,12 +7,23 @@ import { PrivilegiosComponent } from './dashboard/pages/privilegios/privilegios.
 import { ReportesComponent } from './dashboard/pages/reportes/reportes.component';
 import { UsuariosComponent } from './dashboard/pages/usuarios/usuarios.component';
 
+import { InicioComponent } from './dashboard/pages/inicio/inicio.component';
+
 export const routes: Routes = [
   { path: 'login', component: LoginComponent },
   {
     path: 'dashboard',
     component: LayoutComponent,
     children: [
+      {
+        path: 'inicio',
+        component: InicioComponent
+      },
+      {
+        path: '', 
+        redirectTo: 'inicio', 
+        pathMatch: 'full' 
+      },
       {
         path: 'reportes',
         component: ReportesComponent,

@@ -1,0 +1,58 @@
+.inicio-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  /* Toma toda la altura disponible de la pantalla blanca */
+  min-height: 80vh; 
+  position: relative;
+  overflow: hidden;
+  text-align: center;
+}
+
+.hero-content {
+  /* Mantiene el texto por encima de la marca de agua */
+  z-index: 2; 
+  padding: 2rem;
+  animation: fadeIn 1s ease-in-out; /* Un pequeño efecto de aparición */
+}
+
+.titulo-bienvenida {
+  font-size: 3rem;
+  /* Usamos un tono fucsia similar al de tu barra superior/lateral */
+  color: #c2185b; 
+  margin-bottom: 1rem;
+  font-weight: 800;
+}
+
+.subtitulo {
+  font-size: 1.2rem;
+  color: #666666;
+  max-width: 600px;
+  margin: 0 auto;
+  line-height: 1.6;
+}
+
+.marca-agua {
+  position: absolute;
+  /* Letras gigantescas */
+  font-size: 35rem; 
+  /* Fucsia súper transparente (solo un 3% de opacidad) */
+  color: rgba(194, 24, 91, 0.03); 
+  z-index: 1;
+  /* Evita que el usuario pueda seleccionar las letras por error */
+  user-select: none; 
+  font-weight: 900;
+  letter-spacing: -15px;
+}
+
+/* Animación sutil para que el texto entre suavemente al cargar la página */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}

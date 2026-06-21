@@ -22,7 +22,7 @@ interface NavItem {
 })
 export class SidebarComponent implements OnInit {
   navItems: NavItem[] = [
-    { label: 'Inicio', route: '/dashboard', icon: 'home', exact: true, visible: true },
+    { label: 'Inicio', route: '/dashboard/inicio', icon: 'home', exact: true, visible: true },
     { label: 'Reportes', route: '/dashboard/reportes', icon: 'reportes', privilegiosVista: ['Reportes'], visible: false },
     { label: 'Dise\u00f1o', route: '/dashboard/disenos', icon: 'disenos', privilegiosVista: ['Dise\u00f1o', 'Dise\u00f1os', 'Disenos'], visible: false },
     { label: 'Usuarios', route: '/dashboard/usuarios', icon: 'usuarios', privilegiosVista: ['Usuarios'], visible: false },
