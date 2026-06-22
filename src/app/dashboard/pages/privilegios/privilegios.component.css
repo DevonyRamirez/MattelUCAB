@@ -8,10 +8,15 @@
   justify-content: space-between;
 }
 
+.page-header {
+  margin-bottom: 18px;
+}
+
 .header-actions {
   display: flex;
   flex-wrap: wrap;
-  gap: 14px;
+  gap: 16px;
+  justify-content: flex-end;
 }
 
 h1,
@@ -146,82 +151,3 @@ button:disabled {
 .privilege-group {
   display: grid;
   gap: 8px;
-  border: 1px solid #e5e7eb;
-  padding: 12px;
-}
-
-h3,
-.privilege-option small,
-td strong {
-  color: var(--color-principal);
-  font-weight: 800;
-}
-
-h3 {
-  margin: 0;
-}
-
-.privilege-list {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-  gap: 8px;
-}
-
-.privilege-option {
-  display: flex;
-  align-items: flex-start;
-  gap: 8px;
-  min-width: 0;
-  border: 1px solid #edf0f3;
-  padding: 8px;
-  color: var(--color-secundario);
-}
-
-.privilege-option span {
-  overflow-wrap: anywhere;
-}
-
-.privilege-option input {
-  flex: 0 0 auto;
-  margin-top: 3px;
-  accent-color: var(--color-principal);
-}
-
-.privilege-option small {
-  margin-left: auto;
-}
-
-.assign-message,
-.inline-state,
-.state-box {
-  padding: 10px 12px;
-  background: #f9fafb;
-}
-
-.success {
-  color: #047857;
-  background: #ecfdf5;
-}
-
-.error,
-.error-box {
-  color: var(--color-error);
-  background: #fff1f2;
-}
-
-.privilegios-table {
-  width: 100%;
-}
-
-:host ::ng-deep .dt-container .dt-paging .dt-paging-button.current {
-  color: #ffffff !important;
-  border-color: var(--color-principal);
-  background: var(--color-principal);
-}
-
-@media (max-width: 760px) {
-  .filter-row,
-  .privilege-list {
-    grid-template-columns: 1fr;
-  }
-}

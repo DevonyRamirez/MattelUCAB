@@ -1,0 +1,47 @@
+<section class="reportes-page">
+  <div class="page-header">
+    <div>
+      <h1>Reportes</h1>
+      <p>Genera documentos PDF con los datos operativos de Mattel UCAB.</p>
+    </div>
+  </div>
+
+  <div *ngIf="mensaje" class="state-message success">{{ mensaje }}</div>
+  <div *ngIf="error" class="state-message error">{{ error }}</div>
+
+  <div class="report-grid">
+    <article *ngFor="let reporte of reportes" class="report-card">
+      <div class="report-card-head">
+        <span class="report-badge">PDF</span>
+        <span class="report-status">Disponible</span>
+      </div>
+
+      <div>
+        <h2>{{ reporte.titulo }}</h2>
+        <p>{{ reporte.descripcion }}</p>
+      </div>
+
+      <p class="report-detail">{{ reporte.detalle }}</p>
+
+      <div *ngIf="reporte.requiereFechas" class="date-fields">
+        <label class="field">
+          <span>Fecha inicio</span>
+          <input type="date" name="fechaInicioProductosB2B" [(ngModel)]="fechasProductosB2B.inicio" />
+        </label>
+
+        <label class="field">
+          <span>Fecha fin</span>
+          <input type="date" name="fechaFinProductosB2B" [(ngModel)]="fechasProductosB2B.fin" />
+        </label>
+      </div>
+
+      <button
+        type="button"
+        class="action-button"
+        (click)="generarReporte(reporte)"
+        [disabled]="!!reporteGenerando">
+        {{ estaGenerando(reporte) ? 'Generando...' : 'Generar PDF' }}
+      </button>
+    </article>
+  </div>
+</section>

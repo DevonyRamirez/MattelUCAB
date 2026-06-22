@@ -1,0 +1,213 @@
+<section class="usuarios-page">
+  <div class="page-header">
+    <div>
+      <h1>Usuarios</h1>
+      <p>Consulta las personas sin usuario y prepara la asignacion de acceso.</p>
+    </div>
+
+    <div class="header-actions">
+      <button type="button" class="action-button secondary" (click)="abrirModalRol()" [disabled]="cargando || segmentoActivo !== 'con_usuario'">
+        Modificar usuario
+      </button>
+      <button type="button" class="action-button secondary" (click)="abrirModalCrear()" [disabled]="cargando || segmentoActivo !== 'sin_usuario'">
+        Crear usuario
+      </button>
+      <button type="button" class="action-button" (click)="cargarUsuarios()" [disabled]="cargando">
+        Actualizar
+      </button>
+    </div>
+  </div>
+
+  <div *ngIf="mensaje && !modalCrearAbierto && !modalRolAbierto" class="assign-message" [class.success]="tipoMensaje === 'success'" [class.error]="tipoMensaje === 'error'">
+    {{ mensaje }}
+  </div>
+
+  <div *ngIf="cargando" class="state-box">Cargando usuarios...</div>
+  <div *ngIf="!cargando && error" class="state-box error-box">{{ error }}</div>
+
+  <div *ngIf="!cargando && !error" class="segment-control" aria-label="Filtro de usuarios">
+    <button
+      type="button"
+      class="segment-button"
+      [class.active]="segmentoActivo === 'sin_usuario'"
+      (click)="cambiarSegmento('sin_usuario')">
+      Sin usuario
+    </button>
+    <button
+      type="button"
+      class="segment-button"
+      [class.active]="segmentoActivo === 'con_usuario'"
+      (click)="cambiarSegmento('con_usuario')">
+      Con usuario
+    </button>
+  </div>
+
+  <div *ngIf="modalCrearAbierto" class="modal-backdrop">
+    <form class="modal-card" (ngSubmit)="crearUsuario()">
+      <div class="modal-head">
+        <div>
+          <h2>Crear usuario</h2>
+          <p>Selecciona una persona sin usuario, define sus credenciales y asigna un rol.</p>
+        </div>
+        <button type="button" class="icon-button" (click)="cancelarCrearUsuario()">X</button>
+      </div>
+
+      <div class="form-grid">
+        <label class="field wide-field">
+          <span>Persona</span>
+          <select name="personaId" [(ngModel)]="nuevoUsuario.personaId">
+            <option [ngValue]="0">Selecciona una persona</option>
+            <option *ngFor="let persona of personasSinUsuario" [ngValue]="obtenerPersonaId(persona)">
+              {{ obtenerNombre(persona) }} - {{ obtenerIdentificacion(persona) }}
+            </option>
+          </select>
+        </label>
+
+        <label class="field">
+          <span>Nombre de usuario</span>
+          <input
+            type="text"
+            name="nombreUsuario"
+            [(ngModel)]="nuevoUsuario.nombreUsuario"
+            placeholder="usuario" />
+        </label>
+
+        <label class="field">
+          <span>Contraseña</span>
+          <input
+            type="password"
+            name="contrasenaUsuario"
+            [(ngModel)]="nuevoUsuario.contrasenaUsuario"
+            placeholder="Contraseña temporal" />
+        </label>
+
+        <label class="field">
+          <span>Rol</span>
+          <select name="rolId" [(ngModel)]="nuevoUsuario.rolId">
+            <option [ngValue]="0">Selecciona un rol</option>
+            <option *ngFor="let rol of roles" [ngValue]="rol.id_rol">{{ rol.nombre_rol }}</option>
+          </select>
+        </label>
+      </div>
+
+      <div *ngIf="mensaje && modalCrearAbierto" class="assign-message" [class.success]="tipoMensaje === 'success'" [class.error]="tipoMensaje === 'error'">
+        {{ mensaje }}
+      </div>
+
+      <div class="modal-actions">
+        <button type="button" class="action-button secondary" (click)="cancelarCrearUsuario()" [disabled]="guardando">
+          Cancelar
+        </button>
+        <button type="submit" class="action-button" [disabled]="guardando">
+          Guardar
+        </button>
+      </div>
+    </form>
+  </div>
+
+  <div *ngIf="modalRolAbierto" class="modal-backdrop">
+    <form class="modal-card compact-card" (ngSubmit)="modificarRolUsuario()">
+      <div class="modal-head">
+        <div>
+          <h2>Modificar usuario</h2>
+          <p>Actualiza el nombre de usuario, la contraseña o el rol.</p>
+        </div>
+        <button type="button" class="icon-button" (click)="cancelarModificarRol()">X</button>
+      </div>
+
+      <div class="form-grid">
+
+        <label class="field">
+          <span>Nombre de usuario</span>
+          <input
+            type="text"
+            name="rolNombreUsuario"
+            [(ngModel)]="rolUsuario.nombreUsuario"
+            placeholder="usuario" />
+        </label>
+
+        <label class="field">
+          <span>Contraseña</span>
+          <input
+            type="password"
+            name="rolContrasenaUsuario"
+            [(ngModel)]="rolUsuario.contrasenaUsuario"
+            placeholder="Dejar vacía para no cambiar" />
+        </label>
+
+        <label class="field">
+          <span>Rol</span>
+          <select name="rolUsuarioId" [(ngModel)]="rolUsuario.rolId">
+            <option [ngValue]="0">Selecciona un rol</option>
+            <option *ngFor="let rol of roles" [ngValue]="rol.id_rol">{{ rol.nombre_rol }}</option>
+          </select>
+        </label>
+      </div>
+
+      <div *ngIf="mensaje && modalRolAbierto" class="assign-message" [class.success]="tipoMensaje === 'success'" [class.error]="tipoMensaje === 'error'">
+        {{ mensaje }}
+      </div>
+
+      <div class="modal-actions">
+        <button type="button" class="action-button secondary" (click)="cancelarModificarRol()" [disabled]="guardando">
+          Cancelar
+        </button>
+        <button type="submit" class="action-button" [disabled]="guardando">
+          Guardar
+        </button>
+      </div>
+    </form>
+  </div>
+
+  <div *ngIf="!cargando && !error && tablaVisible" class="table-shell">
+    <table #usuariosTable class="display usuarios-table">
+      <thead>
+        <tr *ngIf="segmentoActivo === 'sin_usuario'">
+          <th>Tipo</th>
+          <th>RIF</th>
+          <th>Nombre/Razón social</th>
+          <th>Apellido/Comercial</th>
+          <th>Acción</th>
+        </tr>
+        <tr *ngIf="segmentoActivo === 'con_usuario'">
+          <th>Tipo</th>
+          <th>RIF</th>
+          <th>Nombre/Razón social</th>
+          <th>Apellido/Comercial</th>
+          <th>Usuario</th>
+          <th>Rol</th>
+          <th>Acción</th>
+        </tr>
+      </thead>
+      <tbody *ngIf="segmentoActivo === 'sin_usuario'">
+        <tr *ngFor="let persona of personasSinUsuario">
+          <td>{{ obtenerTipo(persona) }}</td>
+          <td>{{ obtenerIdentificacion(persona) }}</td>
+          <td>{{ obtenerNombre(persona) }}</td>
+          <td>{{ obtenerApellidoOComercial(persona) }}</td>
+          <td>
+            <button type="button" class="mini-button" (click)="abrirModalCrear(persona)">
+              Crear usuario
+            </button>
+          </td>
+        </tr>
+      </tbody>
+
+      <tbody *ngIf="segmentoActivo === 'con_usuario'">
+        <tr *ngFor="let persona of personasConUsuario">
+          <td>{{ obtenerTipo(persona) }}</td>
+          <td>{{ obtenerIdentificacion(persona) }}</td>
+          <td>{{ obtenerNombre(persona) }}</td>
+          <td>{{ obtenerApellidoOComercial(persona) }}</td>
+          <td>{{ persona.nombre_usuario || 'Sin usuario' }}</td>
+          <td>{{ persona.nombre_rol || 'Sin rol' }}</td>
+          <td>
+            <button type="button" class="mini-button secondary" (click)="abrirModalRol(persona)">
+              Modificar
+            </button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</section>
