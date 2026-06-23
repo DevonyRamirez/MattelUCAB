@@ -26,13 +26,6 @@ export interface CrearUsuarioPayload {
   rolId: number;
 }
 
-export interface ModificarRolPayload {
-  usuarioId: number | null;
-  nombreUsuarioActual: string;
-  nombreUsuario: string;
-  contrasenaUsuario: string;
-  rolId: number;
-}
 
 export interface UsuariosActionResult {
   ok: boolean;
@@ -97,21 +90,6 @@ export class UsuariosService {
     return this.obtenerResultadoAccion(data);
   }
 
-  async modificarRolUsuario(payload: ModificarRolPayload): Promise<UsuariosActionResult> {
-    const { data, error } = await this.supabase.rpc('modificar_usuario', {
-      p_id_usuario: payload.usuarioId,
-      p_nombre_usuario_actual: payload.nombreUsuarioActual,
-      p_nombre_usuario: payload.nombreUsuario,
-      p_contrasena_usuario: payload.contrasenaUsuario || null,
-      p_id_rol: payload.rolId
-    });
-
-    if (error) {
-      throw new Error(error.message);
-    }
-
-    return this.obtenerResultadoAccion(data);
-  }
 
   private obtenerBooleanoRpc(data: unknown, key: string): boolean {
     if (typeof data === 'boolean') {

@@ -39,6 +39,7 @@ export class DisenosComponent implements OnInit, OnDestroy {
   guardando = false;
   tablaVisible = true;
   modalDisenoAbierto = false;
+  modoConsultaDiseno = false;
   error = '';
   mensaje = '';
   tipoMensaje: TipoMensaje = 'info';
@@ -129,6 +130,7 @@ export class DisenosComponent implements OnInit, OnDestroy {
   nuevoDiseno() {
     this.idBasediseno = null;
     this.detalleConsultado = null;
+    this.modoConsultaDiseno = false;
     this.pasoActivo = 1;
     this.baseDiseno = this.obtenerBaseDisenoInicial();
     this.construccionItems = [this.obtenerConstruccionInicial()];
@@ -148,6 +150,11 @@ export class DisenosComponent implements OnInit, OnDestroy {
   }
 
   async guardarFase1() {
+    if (this.modoConsultaDiseno) {
+      this.mostrarMensaje('El diseno solo esta disponible para consulta.', 'error');
+      return;
+    }
+
     if (!this.baseDiseno.eraId || !this.baseDiseno.coleccionId || !this.baseDiseno.nombre.trim() || !this.baseDiseno.descripcion.trim()) {
       this.mostrarMensaje('Completa era, coleccion, nombre y descripcion.', 'error');
       return;
@@ -184,6 +191,11 @@ export class DisenosComponent implements OnInit, OnDestroy {
   }
 
   async guardarFase2() {
+    if (this.modoConsultaDiseno) {
+      this.mostrarMensaje('El diseno solo esta disponible para consulta.', 'error');
+      return;
+    }
+
     if (!this.idBasediseno) {
       this.mostrarMensaje('Primero guarda la fase 1.', 'error');
       return;
@@ -219,6 +231,11 @@ export class DisenosComponent implements OnInit, OnDestroy {
   }
 
   async guardarFase3() {
+    if (this.modoConsultaDiseno) {
+      this.mostrarMensaje('El diseno solo esta disponible para consulta.', 'error');
+      return;
+    }
+
     if (!this.idBasediseno) {
       this.mostrarMensaje('Primero guarda la fase 1.', 'error');
       return;
@@ -252,6 +269,11 @@ export class DisenosComponent implements OnInit, OnDestroy {
   }
 
   async guardarFase4() {
+    if (this.modoConsultaDiseno) {
+      this.mostrarMensaje('El diseno solo esta disponible para consulta.', 'error');
+      return;
+    }
+
     if (!this.idBasediseno) {
       this.mostrarMensaje('Primero guarda la fase 1.', 'error');
       return;
@@ -290,9 +312,10 @@ export class DisenosComponent implements OnInit, OnDestroy {
       const detalle = await this.disenosService.consultarDetalleDiseno(diseno.id_basediseno);
       this.cargarDetalleEnFormulario(detalle);
       this.detalleConsultado = diseno;
+      this.modoConsultaDiseno = true;
       this.pasoActivo = 1;
       this.modalDisenoAbierto = true;
-      this.mostrarMensaje('Diseno cargado para consulta y edicion.', 'success');
+      this.mostrarMensaje('Diseno cargado para consulta.', 'success');
     } catch (error) {
       this.mostrarMensaje(error instanceof Error ? error.message : 'No se pudo consultar el diseno.', 'error');
     } finally {

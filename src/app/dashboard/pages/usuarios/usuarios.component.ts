@@ -3,7 +3,7 @@ import { ChangeDetectorRef, Component, ElementRef, OnDestroy, OnInit, ViewChild 
 import { FormsModule } from '@angular/forms';
 import DataTable from 'datatables.net-dt';
 import { PrivilegiosService, RolPrivilegios } from '../privilegios/privilegios.service';
-import { CrearUsuarioPayload, ModificarRolPayload, PersonaConUsuario, PersonaSinUsuario, UsuariosService } from './usuarios.service';
+import { CrearUsuarioPayload, PersonaConUsuario, PersonaSinUsuario, UsuariosService } from './usuarios.service';
 
 interface DataTableInstance {
   destroy: () => void;
@@ -26,7 +26,6 @@ export class UsuariosComponent implements OnInit, OnDestroy {
   roles: RolPrivilegios[] = [];
   segmentoActivo: SegmentoUsuarios = 'sin_usuario';
   modalCrearAbierto = false;
-  modalRolAbierto = false;
   cargando = true;
   guardando = false;
   tablaVisible = true;
@@ -35,7 +34,6 @@ export class UsuariosComponent implements OnInit, OnDestroy {
   tipoMensaje: 'success' | 'info' | 'error' = 'info';
 
   nuevoUsuario: CrearUsuarioPayload = this.obtenerFormularioCrearInicial();
-  rolUsuario: ModificarRolPayload = this.obtenerFormularioRolInicial();
 
   private dataTable?: DataTableInstance;
 
@@ -109,7 +107,6 @@ export class UsuariosComponent implements OnInit, OnDestroy {
 
   abrirModalCrear(persona?: PersonaSinUsuario) {
     this.modalCrearAbierto = true;
-    this.modalRolAbierto = false;
     this.mensaje = '';
     this.nuevoUsuario = {
       ...this.obtenerFormularioCrearInicial(),
@@ -118,30 +115,12 @@ export class UsuariosComponent implements OnInit, OnDestroy {
     };
   }
 
-  abrirModalRol(persona?: PersonaConUsuario) {
-    this.modalRolAbierto = true;
-    this.modalCrearAbierto = false;
-    this.mensaje = '';
-    this.rolUsuario = persona
-      ? {
-          usuarioId: this.obtenerUsuarioId(persona),
-          nombreUsuarioActual: persona.nombre_usuario ?? '',
-          nombreUsuario: persona.nombre_usuario ?? '',
-          contrasenaUsuario: '',
-          rolId: this.obtenerRolId(persona)
-        }
-      : this.obtenerFormularioRolInicial();
-  }
 
   cancelarCrearUsuario() {
     this.modalCrearAbierto = false;
     this.nuevoUsuario = this.obtenerFormularioCrearInicial();
   }
 
-  cancelarModificarRol() {
-    this.modalRolAbierto = false;
-    this.rolUsuario = this.obtenerFormularioRolInicial();
-  }
 
   async crearUsuario() {
     if (!this.nuevoUsuario.personaId || !this.nuevoUsuario.nombreUsuario.trim() || !this.nuevoUsuario.contrasenaUsuario || !this.nuevoUsuario.rolId) {
@@ -162,30 +141,6 @@ export class UsuariosComponent implements OnInit, OnDestroy {
       this.mostrarMensaje(resultado.mensaje, resultado.ok ? 'success' : 'error');
     } catch (error) {
       this.mostrarMensaje(error instanceof Error ? error.message : 'No se pudo crear el usuario.', 'error');
-    } finally {
-      this.guardando = false;
-    }
-  }
-
-  async modificarRolUsuario() {
-    if (!this.rolUsuario.nombreUsuario.trim() || !this.rolUsuario.rolId) {
-      this.mostrarMensaje('Completa el usuario y el rol antes de guardar.', 'error');
-      return;
-    }
-
-    this.guardando = true;
-
-    try {
-      const resultado = await this.usuariosService.modificarRolUsuario({
-        ...this.rolUsuario,
-        nombreUsuario: this.rolUsuario.nombreUsuario.trim(),
-        contrasenaUsuario: this.rolUsuario.contrasenaUsuario.trim()
-      });
-      this.modalRolAbierto = false;
-      await this.recargarTabla();
-      this.mostrarMensaje(resultado.mensaje, resultado.ok ? 'success' : 'error');
-    } catch (error) {
-      this.mostrarMensaje(error instanceof Error ? error.message : 'No se pudo modificar el usuario.', 'error');
     } finally {
       this.guardando = false;
     }
@@ -214,19 +169,6 @@ export class UsuariosComponent implements OnInit, OnDestroy {
   obtenerTipoPersonaSeleccionada() {
     const persona = this.personasSinUsuario.find((item) => this.obtenerPersonaId(item) === Number(this.nuevoUsuario.personaId));
     return persona ? this.obtenerTipo(persona) : '';
-  }
-
-  obtenerUsuarioId(persona: PersonaConUsuario) {
-    return persona.id_usuario ? Number(persona.id_usuario) : null;
-  }
-
-  obtenerRolId(persona: PersonaConUsuario) {
-    if (persona.id_rol) {
-      return Number(persona.id_rol);
-    }
-
-    const rol = this.roles.find((item) => item.nombre_rol === persona.nombre_rol);
-    return rol?.id_rol ?? 0;
   }
 
   private async recargarTabla() {
@@ -263,15 +205,6 @@ export class UsuariosComponent implements OnInit, OnDestroy {
     };
   }
 
-  private obtenerFormularioRolInicial(): ModificarRolPayload {
-    return {
-      usuarioId: null,
-      nombreUsuarioActual: '',
-      nombreUsuario: '',
-      contrasenaUsuario: '',
-      rolId: 0
-    };
-  }
 
   private mostrarMensaje(mensaje: string, tipo: 'success' | 'info' | 'error') {
     this.mensaje = mensaje;

@@ -62,8 +62,9 @@
     <section class="modal-card wizard-panel">
       <div class="modal-head">
         <div>
-          <h2>{{ idBasediseno ? 'Editar diseno #' + idBasediseno : 'Crear diseno' }}</h2>
+          <h2>{{ modoConsultaDiseno ? 'Consultar diseno #' + idBasediseno : 'Crear diseno' }}</h2>
           <p *ngIf="detalleConsultado">Consultando: {{ detalleConsultado.nombre_basediseno }}</p>
+          <p *ngIf="modoConsultaDiseno">Consulta de solo lectura.</p>
           <p *ngIf="!detalleConsultado">Guarda cada fase para avanzar.</p>
         </div>
         <button type="button" class="icon-button" (click)="cerrarModalDiseno()" [disabled]="guardando">X</button>
@@ -84,12 +85,12 @@
         <div class="form-grid">
           <label class="field">
             <span>Nombre</span>
-            <input type="text" name="nombreBase" [(ngModel)]="baseDiseno.nombre" placeholder="Nombre del diseno" />
+            <input [disabled]="modoConsultaDiseno" type="text" name="nombreBase" [(ngModel)]="baseDiseno.nombre" placeholder="Nombre del diseno" />
           </label>
 
           <label class="field">
             <span>Era</span>
-            <select name="eraId" [(ngModel)]="baseDiseno.eraId">
+            <select [disabled]="modoConsultaDiseno" name="eraId" [(ngModel)]="baseDiseno.eraId">
               <option [ngValue]="0">Selecciona una era</option>
               <option *ngFor="let era of catalogos.eras" [ngValue]="era.id_era">{{ era.nombre_era }}</option>
             </select>
@@ -97,7 +98,7 @@
 
           <label class="field">
             <span>Colección</span>
-            <select name="coleccionId" [(ngModel)]="baseDiseno.coleccionId">
+            <select [disabled]="modoConsultaDiseno" name="coleccionId" [(ngModel)]="baseDiseno.coleccionId">
               <option [ngValue]="0">Selecciona una coleccion</option>
               <option *ngFor="let coleccion of catalogos.colecciones" [ngValue]="coleccion.id_coleccion">{{ coleccion.nombre_coleccion }}</option>
             </select>
@@ -105,7 +106,7 @@
 
           <label class="field">
             <span>Diseño relacionado</span>
-            <select name="baseDisenoId" [(ngModel)]="baseDiseno.baseDisenoId">
+            <select [disabled]="modoConsultaDiseno" name="baseDisenoId" [(ngModel)]="baseDiseno.baseDisenoId">
               <option [ngValue]="null">Sin relacion</option>
               <option *ngFor="let diseno of obtenerDisenosRelacionables()" [ngValue]="diseno.id_basediseno">
                 {{ diseno.nombre_basediseno }} (#{{ diseno.id_basediseno }})
@@ -115,7 +116,7 @@
 
           <label class="field">
             <span>Tipo de cuerpo</span>
-            <select name="tipoCuerpoId" [(ngModel)]="baseDiseno.tipoCuerpoId">
+            <select [disabled]="modoConsultaDiseno" name="tipoCuerpoId" [(ngModel)]="baseDiseno.tipoCuerpoId">
               <option [ngValue]="null">Sin tipo</option>
               <option *ngFor="let tipo of catalogos.tiposCuerpo" [ngValue]="tipo.id_tipo_cuerpo">{{ tipo.nombre_tipo_cuerpo }}</option>
             </select>
@@ -123,7 +124,7 @@
 
           <label class="field">
             <span>Color de ojos</span>
-            <select name="colorOjosId" [(ngModel)]="baseDiseno.colorOjosId">
+            <select [disabled]="modoConsultaDiseno" name="colorOjosId" [(ngModel)]="baseDiseno.colorOjosId">
               <option [ngValue]="null">Sin color</option>
               <option *ngFor="let color of catalogos.colores" [ngValue]="color.id_color">{{ color.nombre_color }}</option>
             </select>
@@ -131,7 +132,7 @@
 
           <label class="field">
             <span>Tono de piel</span>
-            <select name="colorTonoPielId" [(ngModel)]="baseDiseno.colorTonoPielId">
+            <select [disabled]="modoConsultaDiseno" name="colorTonoPielId" [(ngModel)]="baseDiseno.colorTonoPielId">
               <option [ngValue]="null">Sin tono</option>
               <option *ngFor="let color of catalogos.colores" [ngValue]="color.id_color">{{ color.nombre_color }}</option>
             </select>
@@ -139,28 +140,28 @@
 
           <label class="field">
             <span>Alto</span>
-            <input type="number" min="0" step="0.01" name="alto" [(ngModel)]="baseDiseno.alto" />
+            <input [disabled]="modoConsultaDiseno" type="number" min="0" step="0.01" name="alto" [(ngModel)]="baseDiseno.alto" />
           </label>
 
           <label class="field">
             <span>Ancho</span>
-            <input type="number" min="0" step="0.01" name="ancho" [(ngModel)]="baseDiseno.ancho" />
+            <input [disabled]="modoConsultaDiseno" type="number" min="0" step="0.01" name="ancho" [(ngModel)]="baseDiseno.ancho" />
           </label>
 
           <label class="field">
             <span>Profundidad</span>
-            <input type="number" min="0" step="0.01" name="profundidad" [(ngModel)]="baseDiseno.profundidad" />
+            <input [disabled]="modoConsultaDiseno" type="number" min="0" step="0.01" name="profundidad" [(ngModel)]="baseDiseno.profundidad" />
           </label>
 
           <label class="field wide-field">
             <span>Descripción</span>
-            <textarea name="descripcionBase" rows="3" [(ngModel)]="baseDiseno.descripcion" placeholder="Descripcion del diseno"></textarea>
+            <textarea [disabled]="modoConsultaDiseno" name="descripcionBase" rows="3" [(ngModel)]="baseDiseno.descripcion" placeholder="Descripcion del diseno"></textarea>
           </label>
         </div>
 
         <div class="form-actions">
           <button type="button" class="action-button secondary" (click)="cerrarModalDiseno()" [disabled]="guardando">Cerrar</button>
-          <button type="submit" class="action-button" [disabled]="guardando">Guardar fase 1</button>
+          <button type="submit" class="action-button" [disabled]="guardando || modoConsultaDiseno">Guardar fase 1</button>
         </div>
       </form>
 
@@ -169,7 +170,7 @@
           <div *ngFor="let item of construccionItems; let i = index" class="repeat-row">
             <label class="field">
               <span>Pieza</span>
-              <select name="pieza{{ i }}" [(ngModel)]="item.piezaId">
+              <select [disabled]="modoConsultaDiseno" name="pieza{{ i }}" [(ngModel)]="item.piezaId">
                 <option [ngValue]="0">Pieza</option>
                 <option *ngFor="let pieza of catalogos.piezas" [ngValue]="pieza.id_pieza">{{ pieza.nombre_pieza }}</option>
               </select>
@@ -177,7 +178,7 @@
 
             <label class="field">
               <span>Molde</span>
-              <select name="molde{{ i }}" [(ngModel)]="item.moldeId">
+              <select [disabled]="modoConsultaDiseno" name="molde{{ i }}" [(ngModel)]="item.moldeId">
                 <option [ngValue]="0">Molde</option>
                 <option *ngFor="let molde of catalogos.moldes" [ngValue]="molde.id_molde">{{ molde.nombre_molde }}</option>
               </select>
@@ -185,7 +186,7 @@
 
             <label class="field">
               <span>Materia prima</span>
-              <select name="materiaPrima{{ i }}" [(ngModel)]="item.materiaPrimaId">
+              <select [disabled]="modoConsultaDiseno" name="materiaPrima{{ i }}" [(ngModel)]="item.materiaPrimaId">
                 <option [ngValue]="0">Materia prima</option>
                 <option *ngFor="let materia of catalogos.materiasPrimas" [ngValue]="materia.id_materiaprima">{{ materia.nombre_materiaprima }}</option>
               </select>
@@ -193,16 +194,16 @@
 
             <label class="field compact-field">
               <span>Cantidad</span>
-              <input type="number" min="1" name="cantidadMateria{{ i }}" [(ngModel)]="item.cantidadMateriaPrima" />
+              <input [disabled]="modoConsultaDiseno" type="number" min="1" name="cantidadMateria{{ i }}" [(ngModel)]="item.cantidadMateriaPrima" />
             </label>
 
-            <button type="button" class="mini-button danger" (click)="eliminarConstruccion(i)">Quitar</button>
+            <button type="button" class="mini-button danger" (click)="eliminarConstruccion(i)" [disabled]="modoConsultaDiseno">Quitar</button>
           </div>
         </div>
 
         <div class="form-actions split-actions">
-          <button type="button" class="action-button secondary" (click)="agregarConstruccion()">Agregar pieza</button>
-          <button type="submit" class="action-button" [disabled]="guardando">Guardar fase 2</button>
+          <button type="button" class="action-button secondary" (click)="agregarConstruccion()" [disabled]="modoConsultaDiseno">Agregar pieza</button>
+          <button type="submit" class="action-button" [disabled]="guardando || modoConsultaDiseno">Guardar fase 2</button>
         </div>
       </form>
 
@@ -211,7 +212,7 @@
           <fieldset>
             <legend>Profesiones</legend>
             <label *ngFor="let profesion of catalogos.profesiones" class="check-row">
-              <input type="checkbox" [checked]="estaSeleccionado(caracteristicas.profesionIds, profesion.id_profesion)" (change)="cambiarSeleccion(caracteristicas.profesionIds, profesion.id_profesion, $event)" />
+              <input [disabled]="modoConsultaDiseno" type="checkbox" [checked]="estaSeleccionado(caracteristicas.profesionIds, profesion.id_profesion)" (change)="cambiarSeleccion(caracteristicas.profesionIds, profesion.id_profesion, $event)" />
               <span>{{ profesion.nombre_profesion }}</span>
             </label>
           </fieldset>
@@ -219,7 +220,7 @@
           <fieldset>
             <legend>Clasificaciones</legend>
             <label *ngFor="let clasificacion of catalogos.clasificaciones" class="check-row">
-              <input type="checkbox" [checked]="estaSeleccionado(caracteristicas.clasificacionIds, clasificacion.id_clasificacion)" (change)="cambiarSeleccion(caracteristicas.clasificacionIds, clasificacion.id_clasificacion, $event)" />
+              <input [disabled]="modoConsultaDiseno" type="checkbox" [checked]="estaSeleccionado(caracteristicas.clasificacionIds, clasificacion.id_clasificacion)" (change)="cambiarSeleccion(caracteristicas.clasificacionIds, clasificacion.id_clasificacion, $event)" />
               <span>{{ clasificacion.nombre_clasificacion }}</span>
             </label>
           </fieldset>
@@ -227,7 +228,7 @@
           <fieldset>
             <legend>Categorías</legend>
             <label *ngFor="let categoria of catalogos.categorias" class="check-row">
-              <input type="checkbox" [checked]="estaSeleccionado(caracteristicas.categoriaIds, categoria.id_categoria)" (change)="cambiarSeleccion(caracteristicas.categoriaIds, categoria.id_categoria, $event)" />
+              <input [disabled]="modoConsultaDiseno" type="checkbox" [checked]="estaSeleccionado(caracteristicas.categoriaIds, categoria.id_categoria)" (change)="cambiarSeleccion(caracteristicas.categoriaIds, categoria.id_categoria, $event)" />
               <span>{{ categoria.nombre_categoria }}</span>
             </label>
           </fieldset>
@@ -235,7 +236,7 @@
           <fieldset>
             <legend>Sets de regalo</legend>
             <label *ngFor="let set of catalogos.setsRegalo" class="check-row">
-              <input type="checkbox" [checked]="estaSeleccionado(caracteristicas.setRegaloIds, set.id_setregalo)" (change)="cambiarSeleccion(caracteristicas.setRegaloIds, set.id_setregalo, $event)" />
+              <input [disabled]="modoConsultaDiseno" type="checkbox" [checked]="estaSeleccionado(caracteristicas.setRegaloIds, set.id_setregalo)" (change)="cambiarSeleccion(caracteristicas.setRegaloIds, set.id_setregalo, $event)" />
               <span>{{ set.nombre_setregalo }}</span>
             </label>
           </fieldset>
@@ -243,14 +244,14 @@
 
         <div class="subsection-head">
           <h3>Valores de caracteristicas</h3>
-          <button type="button" class="mini-button" (click)="agregarCaracteristica()">Agregar</button>
+          <button type="button" class="mini-button" (click)="agregarCaracteristica()" [disabled]="modoConsultaDiseno">Agregar</button>
         </div>
 
         <div class="repeat-list">
           <div *ngFor="let item of caracteristicas.caracteristicas; let i = index" class="repeat-row two-columns">
             <label class="field">
               <span>Característica</span>
-              <select name="caracteristica{{ i }}" [(ngModel)]="item.caracteristicaId">
+              <select [disabled]="modoConsultaDiseno" name="caracteristica{{ i }}" [(ngModel)]="item.caracteristicaId">
                 <option [ngValue]="0">Selecciona</option>
                 <option *ngFor="let caracteristica of catalogos.caracteristicas" [ngValue]="caracteristica.id_caracteristica">
                   {{ caracteristica.nombre_caracteristica }}
@@ -260,15 +261,15 @@
 
             <label class="field">
               <span>Valor</span>
-              <input type="text" name="valorCaracteristica{{ i }}" [(ngModel)]="item.valor" placeholder="Valor" />
+              <input [disabled]="modoConsultaDiseno" type="text" name="valorCaracteristica{{ i }}" [(ngModel)]="item.valor" placeholder="Valor" />
             </label>
 
-            <button type="button" class="mini-button danger" (click)="eliminarCaracteristica(i)">Quitar</button>
+            <button type="button" class="mini-button danger" (click)="eliminarCaracteristica(i)" [disabled]="modoConsultaDiseno">Quitar</button>
           </div>
         </div>
 
         <div class="form-actions">
-          <button type="submit" class="action-button" [disabled]="guardando">Guardar fase 3</button>
+          <button type="submit" class="action-button" [disabled]="guardando || modoConsultaDiseno">Guardar fase 3</button>
         </div>
       </form>
 
@@ -277,7 +278,7 @@
           <div *ngFor="let item of fasesItems; let i = index" class="repeat-row">
             <label class="field">
               <span>Prueba</span>
-              <select name="prueba{{ i }}" [(ngModel)]="item.pruebaId">
+              <select [disabled]="modoConsultaDiseno" name="prueba{{ i }}" [(ngModel)]="item.pruebaId">
                 <option [ngValue]="0">Prueba</option>
                 <option *ngFor="let prueba of catalogos.pruebas" [ngValue]="prueba.id_prueba">{{ prueba.nombre_prueba }}</option>
               </select>
@@ -285,7 +286,7 @@
 
             <label class="field">
               <span>Fase</span>
-              <select name="fase{{ i }}" [(ngModel)]="item.faseId">
+              <select [disabled]="modoConsultaDiseno" name="fase{{ i }}" [(ngModel)]="item.faseId">
                 <option [ngValue]="0">Fase</option>
                 <option *ngFor="let fase of catalogos.fases" [ngValue]="fase.id_fase">{{ fase.nombre_fase }}</option>
               </select>
@@ -293,7 +294,7 @@
 
             <label class="field">
               <span>Cargo</span>
-              <select name="cargo{{ i }}" [(ngModel)]="item.cargoId">
+              <select [disabled]="modoConsultaDiseno" name="cargo{{ i }}" [(ngModel)]="item.cargoId">
                 <option [ngValue]="0">Cargo</option>
                 <option *ngFor="let cargo of catalogos.cargos" [ngValue]="cargo.id_cargo">{{ cargo.nombre_cargo }}</option>
               </select>
@@ -301,16 +302,16 @@
 
             <label class="field compact-field">
               <span>Cantidad</span>
-              <input type="number" min="1" name="cantidadCargo{{ i }}" [(ngModel)]="item.cantidadCargo" />
+              <input [disabled]="modoConsultaDiseno" type="number" min="1" name="cantidadCargo{{ i }}" [(ngModel)]="item.cantidadCargo" />
             </label>
 
-            <button type="button" class="mini-button danger" (click)="eliminarFase(i)">Quitar</button>
+            <button type="button" class="mini-button danger" (click)="eliminarFase(i)" [disabled]="modoConsultaDiseno">Quitar</button>
           </div>
         </div>
 
         <div class="form-actions split-actions">
-          <button type="button" class="action-button secondary" (click)="agregarFase()">Agregar fase</button>
-          <button type="submit" class="action-button" [disabled]="guardando">Guardar fase 4</button>
+          <button type="button" class="action-button secondary" (click)="agregarFase()" [disabled]="modoConsultaDiseno">Agregar fase</button>
+          <button type="submit" class="action-button" [disabled]="guardando || modoConsultaDiseno">Guardar fase 4</button>
         </div>
       </form>
     </section>

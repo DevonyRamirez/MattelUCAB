@@ -72,13 +72,13 @@
   </div>
 
   <div *ngIf="modalAbierto" class="modal-backdrop">
-    <form class="modal-card" (ngSubmit)="asignarPrivilegios()">
+    <form class="modal-card privileges-modal-card" (ngSubmit)="asignarPrivilegios()">
       <div class="modal-head">
         <div>
           <h2>Modificar privilegios</h2>
           <p>Selecciona un rol, marca los privilegios que debe tener y guarda los cambios.</p>
         </div>
-        <button type="button" class="icon-button" (click)="cancelarModificacion()">X</button>
+        <button type="button" class="icon-button" aria-label="Cerrar modal" (click)="cancelarModificacion()">X</button>
       </div>
 
       <div class="filter-row">
@@ -108,36 +108,41 @@
         </label>
       </div>
 
-      <div class="selection-summary" *ngIf="rolSeleccionado">
-        <span>{{ cantidadSeleccionada }} seleccionados</span>
-        <span>{{ cantidadNuevosSeleccionados }} por agregar</span>
-        <span>{{ cantidadPorEliminar }} por eliminar</span>
-        <span>{{ privilegiosFiltrados.length }} visibles</span>
-      </div>
+      <div class="selection-toolbar" *ngIf="rolSeleccionado">
+        <div class="selection-summary">
+          <span><strong>{{ cantidadSeleccionada }}</strong> seleccionados</span>
+          <span class="summary-add"><strong>{{ cantidadNuevosSeleccionados }}</strong> por agregar</span>
+          <span class="summary-remove"><strong>{{ cantidadPorEliminar }}</strong> por quitar</span>
+          <span><strong>{{ privilegiosFiltrados.length }}</strong> visibles</span>
+        </div>
 
-      <div class="bulk-actions" *ngIf="rolSeleccionado && !cargandoRol">
-        <button type="button" class="mini-button" (click)="marcarPrivilegiosFiltrados()" [disabled]="privilegiosFiltrados.length === 0">
-          Marcar visibles
-        </button>
-        <button type="button" class="mini-button secondary" (click)="desmarcarPrivilegiosFiltrados()" [disabled]="privilegiosFiltrados.length === 0">
-          Desmarcar visibles
-        </button>
+        <div class="bulk-actions" *ngIf="!cargandoRol">
+          <button type="button" class="mini-button" (click)="marcarPrivilegiosFiltrados()" [disabled]="privilegiosFiltrados.length === 0">
+            Marcar visibles
+          </button>
+          <button type="button" class="mini-button secondary" (click)="desmarcarPrivilegiosFiltrados()" [disabled]="privilegiosFiltrados.length === 0">
+            Desmarcar visibles
+          </button>
+        </div>
       </div>
 
       <div *ngIf="cargandoRol" class="inline-state">Cargando privilegios del rol...</div>
+      <div *ngIf="!rolSeleccionado" class="inline-state empty-state">Selecciona un rol para ver y modificar sus privilegios.</div>
 
       <div class="privilege-groups" *ngIf="rolSeleccionado && !cargandoRol">
         <section *ngFor="let grupo of privilegiosAgrupados" class="privilege-group">
-          <h3>{{ grupo.tipo }}</h3>
+          <div class="privilege-group-head">
+            <h3>{{ grupo.tipo }}</h3>
+            <span>{{ grupo.privilegios.length }} visibles</span>
+          </div>
 
-          <div class="privilege-list">
-            <label *ngFor="let privilegio of grupo.privilegios" class="privilege-option">
+          <div class="privilege-check-grid">
+            <label *ngFor="let privilegio of grupo.privilegios" class="privilege-check-item">
               <input
                 type="checkbox"
                 [checked]="estaSeleccionado(privilegio.id_privilegio)"
                 (change)="cambiarPrivilegioDesdeEvento(privilegio.id_privilegio, $event)" />
               <span>{{ privilegio.descripcion_privilegio }}</span>
-              <small *ngIf="yaAsignado(privilegio.id_privilegio)">Asignado</small>
             </label>
           </div>
         </section>

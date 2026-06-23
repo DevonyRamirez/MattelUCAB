@@ -6,9 +6,6 @@
     </div>
 
     <div class="header-actions">
-      <button type="button" class="action-button secondary" (click)="abrirModalRol()" [disabled]="cargando || segmentoActivo !== 'con_usuario'">
-        Modificar usuario
-      </button>
       <button type="button" class="action-button secondary" (click)="abrirModalCrear()" [disabled]="cargando || segmentoActivo !== 'sin_usuario'">
         Crear usuario
       </button>
@@ -18,7 +15,7 @@
     </div>
   </div>
 
-  <div *ngIf="mensaje && !modalCrearAbierto && !modalRolAbierto" class="assign-message" [class.success]="tipoMensaje === 'success'" [class.error]="tipoMensaje === 'error'">
+  <div *ngIf="mensaje && !modalCrearAbierto" class="assign-message" [class.success]="tipoMensaje === 'success'" [class.error]="tipoMensaje === 'error'">
     {{ mensaje }}
   </div>
 
@@ -105,59 +102,6 @@
     </form>
   </div>
 
-  <div *ngIf="modalRolAbierto" class="modal-backdrop">
-    <form class="modal-card compact-card" (ngSubmit)="modificarRolUsuario()">
-      <div class="modal-head">
-        <div>
-          <h2>Modificar usuario</h2>
-          <p>Actualiza el nombre de usuario, la contraseña o el rol.</p>
-        </div>
-        <button type="button" class="icon-button" (click)="cancelarModificarRol()">X</button>
-      </div>
-
-      <div class="form-grid">
-
-        <label class="field">
-          <span>Nombre de usuario</span>
-          <input
-            type="text"
-            name="rolNombreUsuario"
-            [(ngModel)]="rolUsuario.nombreUsuario"
-            placeholder="usuario" />
-        </label>
-
-        <label class="field">
-          <span>Contraseña</span>
-          <input
-            type="password"
-            name="rolContrasenaUsuario"
-            [(ngModel)]="rolUsuario.contrasenaUsuario"
-            placeholder="Dejar vacía para no cambiar" />
-        </label>
-
-        <label class="field">
-          <span>Rol</span>
-          <select name="rolUsuarioId" [(ngModel)]="rolUsuario.rolId">
-            <option [ngValue]="0">Selecciona un rol</option>
-            <option *ngFor="let rol of roles" [ngValue]="rol.id_rol">{{ rol.nombre_rol }}</option>
-          </select>
-        </label>
-      </div>
-
-      <div *ngIf="mensaje && modalRolAbierto" class="assign-message" [class.success]="tipoMensaje === 'success'" [class.error]="tipoMensaje === 'error'">
-        {{ mensaje }}
-      </div>
-
-      <div class="modal-actions">
-        <button type="button" class="action-button secondary" (click)="cancelarModificarRol()" [disabled]="guardando">
-          Cancelar
-        </button>
-        <button type="submit" class="action-button" [disabled]="guardando">
-          Guardar
-        </button>
-      </div>
-    </form>
-  </div>
 
   <div *ngIf="!cargando && !error && tablaVisible" class="table-shell">
     <table #usuariosTable class="display usuarios-table">
@@ -176,7 +120,6 @@
           <th>Apellido/Comercial</th>
           <th>Usuario</th>
           <th>Rol</th>
-          <th>Acción</th>
         </tr>
       </thead>
       <tbody *ngIf="segmentoActivo === 'sin_usuario'">
@@ -201,11 +144,6 @@
           <td>{{ obtenerApellidoOComercial(persona) }}</td>
           <td>{{ persona.nombre_usuario || 'Sin usuario' }}</td>
           <td>{{ persona.nombre_rol || 'Sin rol' }}</td>
-          <td>
-            <button type="button" class="mini-button secondary" (click)="abrirModalRol(persona)">
-              Modificar
-            </button>
-          </td>
         </tr>
       </tbody>
     </table>
